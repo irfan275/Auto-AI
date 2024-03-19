@@ -11,6 +11,8 @@ var fileUpload = require('express-fileupload');
 
 require('dotenv').config();
 
+// db config 🐰
+require('./src/config/db');
 
 
 const httpServer = http.createServer(app);
@@ -34,12 +36,12 @@ app.get("/", (req, res) => {
 	})
 })
 
-// var user_route = require('./route/user');
+ var user_route = require('./src/route/user');
 // var comment_route = require('./route/comment');
 // var admin_route = require('./route/admin');
 const port = process.env.PORT || 3000;
 //const httpsPort = process.env.HTTPSPORT || 3005;
-// app.use('/user', user_route);
+ app.use('/user', user_route);
 // app.use('/comment', comment_route);
 // app.use('/admin', admin_route);
 
