@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const { UserRoles, StatusEnum } = require("../constants/userEnum");
-const { addUpdatedByPreSave, addCreatedByPreSave } = require("../helper/dbHelper");
+const { UserRoles, StatusEnum } = require("../constants/user.constant");
+const { addUpdatedByPreSave, addCreatedByPreSave } = require("../helper/db.helper");
 
 const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
@@ -36,6 +36,10 @@ const UserSchema = new Schema({
         enum: Object.keys(StatusEnum),
         default: 'ACTIVE', // Optional: Set a default value
       },
+    garageIds : {
+        type : [ObjectId],
+        ref : 'Garage'
+    },
     roles: {
         type: [String],
         enum: UserRoles,
@@ -58,11 +62,11 @@ const UserSchema = new Schema({
     },
     createdBy : {
         type : ObjectId,
-        ref : 'user'
+        ref : 'User'
     },
     updatedBy : {
         type : ObjectId,
-        ref : 'user',
+        ref : 'User',
         //required : true
     },
   },{ collection: 'User',timestamps: true });

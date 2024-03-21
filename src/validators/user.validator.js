@@ -1,22 +1,25 @@
 const { body,query } = require('express-validator')
-const { Messages } = require('../constants/messageConstant')
+const { Messages } = require('../constants/message.constant')
 
 const validationRules = {
   login : () => {
     return [
-      body('email', Messages.EMAIL_PSWD_REQ).exists().isEmail().withMessage(Messages.EMAIL_FORMAT_INVALID),
-      body('password',Messages.EMAIL_PSWD_REQ).exists(),
+      body('email').exists().isEmail().withMessage(Messages.EMAIL_FORMAT_INVALID),
+      body('password').exists(),
     ]
   },
   register_user : () => {
     return [
-      body('email', "Please enter your Email .").exists().isEmail(),
-      body('password',"Please enter your Password.").exists(),
-      body('first_name',"Please send first name.").exists(),
-      body('last_name',"Please send last name.").exists(),
-      body('address',"Please send address.").exists(),
-      body('phone',"Please send phone.").exists(),
-      //body('zip_code',"Please send zip code.").exists()
+      body('email').exists().isEmail(),
+      body('password').exists(),
+      body('first_name').exists(),
+      body('last_name').exists(),
+      // Validate the 'roles' field
+      body('roles')
+      .exists() // Check if the field exists
+      .isArray().withMessage('Roles must be an array') // Check if it's an array
+      .custom(value => value.length >= 1).withMessage('At least one role must be provided'), 
+      //body('phone').exists(),
     ]
   },
 
@@ -33,7 +36,7 @@ const validationRules = {
   },
   forgotPassword : () => {
     return [
-      body('email', "Please send email.").exists()
+      body('email', "Please send mail.").exists()
     ]
   },
   resetPassword : () => {

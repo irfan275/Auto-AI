@@ -1,69 +1,81 @@
 const mongoose = require('mongoose');
-const { StatusEnum } = require("../constants/userEnum");
-const { addUpdatedByPreSave, addCreatedByPreSave } = require("../helper/dbHelper");
+const { StatusEnum } = require("../constants/user.constant");
+const { addUpdatedByPreSave, addCreatedByPreSave } = require("../helper/db.helper");
 
 const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
 
+// Custom function to validate coordinates
+function validateCoordinates(value) {
+    // Check if location is present and not null
+    if (this.location && value) {
+        // Validate coordinates format
+        return Array.isArray(value) && value.length === 2;
+    }
+    // Bypass validation if location is missing or null
+    return true;
+}
+
 const GarageSchema = new Schema({
     name: { 
         type: String, 
-        default: '' ,
+        default: '',
         trim: true,
-        required : true
+        required: true
     },
-    ownerName : {
-        type :String
+    ownerName: {
+        type: String
     },
-    address : {
-        postalCode : {
-            type : Number
+    address: {
+        postalCode: {
+            type: Number
         },
-        street : {
-            type : String
+        street: {
+            type: String
         },
-        city : {
-            type : String
+        city: {
+            type: String
         },
-        country : {
-            type : String
+        country: {
+            type: String,
+            required: true
         }
     },
     location: {
-		latitude: {
-			type: Number
-		},
-		longitude: {
-			type: Number
-		}
+        type: {
+            type: String,
+            enum: ['Point'],
+            default: 'Point'
+        },
+        coordinates: {
+            type: [Number],
+            default: [0, 0],
+            validate: {
+                validator: validateCoordinates,
+                message: 'Invalid location coordinates: must be an array with two elements'
+            }
+        }
     },
-    phoneNumber : {
-        type : Number
+    phoneNumber: {
+        type: Number
     },
-
-    // userId : {
-    //     type : ObjectId,
-    //     ref : 'user',
-    //     required : true
-    // },
     status: {
         type: String,
         enum: StatusEnum,
-        default: 'ACTIVE', // Optional: Set a default value
-      },
-    createdBy : {
-        type : ObjectId,
-        ref : 'user'
+        default: 'ACTIVE'
     },
-    updatedBy : {
-        type : ObjectId,
-        ref : 'user',
-        required : true
+    createdBy: {
+        type: ObjectId,
+        ref: 'User'
     },
-  },{ collection: 'Garage',timestamps: true });
+    updatedBy: {
+        type: ObjectId,
+        ref: 'User'
+    }
+}, { collection: 'Garage', timestamps: true });
 
-  // Define pre-save middleware
-  GarageSchema.plugin(addCreatedByPreSave);
-  GarageSchema.plugin(addUpdatedByPreSave);
+// Index location field for geospatial queries
+GarageSchema.index({ location: '2dsphere' });
 
-  module.exports = mongoose.model('Garage',GarageSchema);
+const Garage = mongoose.model('Garage', GarageSchema);
+module.exports = Garage;

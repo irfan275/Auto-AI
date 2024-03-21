@@ -1,6 +1,6 @@
 let jwt = require('jsonwebtoken');
 require('dotenv').config();
-let checkToken = (req, res, next) => {
+let authenticateToken = (req, res, next) => {
   
   let token = req.headers['x-access-token'] || req.headers['authorization']; // Express headers are auto converted to lowercase
   if (token.startsWith('Bearer ')) {
@@ -15,7 +15,7 @@ let checkToken = (req, res, next) => {
           message: 'Token is not valid'
         });
       } else {
-        req.decoded = decoded;
+        req.user = decoded;
         next();
       }
     });
@@ -37,4 +37,4 @@ const createToken = (data) => {
       return token;
 }
 
-module.exports = {checkToken ,createToken}
+module.exports = {authenticateToken ,createToken}

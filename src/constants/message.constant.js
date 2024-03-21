@@ -8,6 +8,12 @@ const Messages = {
     LOGIN_SUCCESS : '',
     EMAIL_PSWD_REQ : 'Please enter your Email and Password.',
     EMAIL_FORMAT_INVALID : 'Invalid email address format',
+    IS_REQ : ' is required',
+    POSTAL_CODE_INVALID : 'Postal code must be numeric',
+    MUST_BE_ARRAY: 'Roles must be an array',
+    USER_ALREADY_EXIST : 'User already exist with this email',
+    USER_NOT_FOUND : 'User not found'
+
 };
 
 module.exports= {

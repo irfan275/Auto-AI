@@ -37,13 +37,14 @@ app.get("/", (req, res) => {
 })
 
  var user_route = require('./src/route/user');
-// var comment_route = require('./route/comment');
-// var admin_route = require('./route/admin');
+ var garage_route = require('./src/route/garage');
+
 const port = process.env.PORT || 3000;
 //const httpsPort = process.env.HTTPSPORT || 3005;
- app.use('/user', user_route);
-// app.use('/comment', comment_route);
-// app.use('/admin', admin_route);
+const basePath = '/api';
+app.use(basePath+'/user', user_route);
+app.use(basePath+'/garage', garage_route);
+
 
 httpServer.listen(port, () => console.log(`Auto AI App listening on port ${port}!`))
 //httpsServer.listen(httpsPort, () => console.log(`Example app listening on port ${httpsPort}!`));
